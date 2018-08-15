@@ -346,12 +346,15 @@ cli.createParser = function() {
     var handlers = require('jsdoc/src/handlers');
     var parser = require('jsdoc/src/parser');
     var plugins = require('jsdoc/plugins');
+    var allPlugins = []
+        .concat((env.conf.plugins || []))
+        .concat((env.opts.plugin || []));
 
     app.jsdoc.parser = parser.createParser(env.conf.parser);
 
-    if (env.conf.plugins) {
-        env.conf.plugins = resolvePluginPaths(env.conf.plugins);
-        plugins.installPlugins(env.conf.plugins, app.jsdoc.parser);
+    if (allPlugins.length) {
+        allPlugins = resolvePluginPaths(allPlugins);
+        plugins.installPlugins(allPlugins, app.jsdoc.parser);
     }
 
     handlers.attachTo(app.jsdoc.parser);
